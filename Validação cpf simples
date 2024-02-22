@@ -1,7 +1,19 @@
+import sys
+import re
 
-#validar um CPF
+entrada = input('Digite um cpf: ')
+cpf_recebido = re.sub(
+    r'[^0-9]',
+    '',
+    entrada
+)
 
-cpf_recebido = input('Digite um cpf sem pontos: ')
+entrada_sequencial = entrada == entrada[0] * len(entrada)
+
+if entrada_sequencial:
+    print('Voce enviou dados sequenciais.')
+    sys.exit()
+
 nove_digitos = cpf_recebido[:9]
 contador_1 = 10
 resultado_1 = 0
