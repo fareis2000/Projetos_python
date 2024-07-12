@@ -1,0 +1,38 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import pandas as pd
+
+# Configurações do servidor SMTP
+SMTP_SERVER = 'smtp.office365.com'
+SMTP_PORT = 587
+SMTP_USER = 'exemplo@hotmail.com'#alterar estes dado
+SMTP_PASSWORD = 'senhaexemplo'#alterar estes dados
+
+# Ler a base de dados
+df = pd.read_csv('base_de_dados.csv')
+
+# Função para enviar e-mail
+def enviar_email(to_email, assunto, corpo):
+    msg = MIMEMultipart()
+    msg['From'] = SMTP_USER
+    msg['To'] = to_email
+    msg['Subject'] = assunto
+
+    msg.attach(MIMEText(corpo, 'plain'))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.send_message(msg)
+        print(f'E-mail enviado para {to_email}')
+    except Exception as e:
+        print(f'Erro ao enviar e-mail para {to_email}: {e}')
+
+# Enviar e-mail para cada contato
+for _, row in df.iterrows():
+    to_email = row['email']
+    assunto = 'Oi isa'
+    corpo = f'Olá {row["nome"]},\n\nEste é um e-mail automatizado. Que demonstra todo o meu amor por voce'
+    enviar_email(to_email, assunto, corpo)
